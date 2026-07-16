@@ -43,10 +43,35 @@ App: [http://localhost:3000](http://localhost:3000)
 
 - Next.js App Router shell with SCSS
 - Docker Postgres, `users` / `quotes` schema, seed script
+- Quote pricing model + APIs (`/api/health`, `POST /api/quotes`, `GET /api/quotes/:id`)
+- Cookie session login (`POST /api/auth/login`) for protected quote routes
 - ESLint, Jest, GitHub Actions CI
+
+## Frontend API client
+
+Browser-only Axios client at `src/lib/api` (`withCredentials` for session cookies):
+
+- Request/response logging to the console
+- Retries network errors, `5xx`, and `429` up to 3 attempts with exponential backoff (300ms → 600ms → 1200ms)
+- Does not retry other `4xx`
+
+```ts
+import { apiClient } from "@/lib/api";
+
+const { data } = await apiClient.get("/health");
+```
+
+
+| Method | Path | Auth | Notes |
+| --- | --- | --- | --- |
+| `GET` | `/api/health` | no | `{ status, db }` |
+| `POST` | `/api/auth/login` | no | `{ email, password }` → sets session cookie |
+| `POST` | `/api/quotes` | yes | validates, prices, persists, returns normalized quote |
+| `GET` | `/api/quotes/:id` | yes | owner or admin only |
+
+Currency for pricing: EUR-equivalent units (`systemPrice = systemSizeKw * 1200`).
 
 ## What’s next
 
-- Auth (register / login / sessions)
-- Quote APIs + pricing model
-- Quote form, results, and admin views
+- Registration UI + quote form / results / admin views
+- `GET /api/quotes` list endpoint
