@@ -1,0 +1,58 @@
+@use "../../styles/variables" as *;
+
+.card {
+  background: $color-surface;
+  border: 1px solid rgba($color-border, 0.8);
+  border-radius: $radius-md;
+  box-shadow: $shadow-card;
+  overflow: hidden;
+}
+
+.padded .body {
+  padding: 1.25rem 1.35rem 1.35rem;
+}
+
+.padded .header,
+.padded .footer {
+  padding-left: 1.35rem;
+  padding-right: 1.35rem;
+}
+
+.header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 1.25rem;
+  padding-bottom: 0.35rem;
+}
+
+.heading {
+  min-width: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: $color-navy;
+}
+
+.subtitle {
+  margin: 0.35rem 0 0;
+  color: $color-muted;
+  font-size: 0.9rem;
+}
+
+.actions {
+  flex-shrink: 0;
+}
+
+.body {
+  color: $color-text;
+}
+
+.footer {
+  padding-bottom: 1.25rem;
+  padding-top: 0.25rem;
+}
