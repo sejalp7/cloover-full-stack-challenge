@@ -1,0 +1,29 @@
+@use "../styles/variables" as *;
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-lg $space-md;
+}
+
+.main {
+  width: min(40rem, 100%);
+}
+
+.brand {
+  margin: 0 0 0.75rem;
+  font-size: clamp(2.5rem, 6vw, 3.5rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: $color-accent;
+}
+
+.lede {
+  margin: 0;
+  max-width: 32rem;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: $color-muted;
+}
