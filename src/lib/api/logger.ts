@@ -1,25 +1,19 @@
+import { logger } from "@/lib/logger";
+
 type LogFields = Record<string, unknown>;
 
-function format(level: "info" | "warn" | "error", message: string, fields: LogFields) {
-  return {
-    level,
-    message,
-    timestamp: new Date().toISOString(),
-    ...fields,
-  };
-}
-
+/** Browser axios client logger — same JSON shape as server logs. */
 export const apiLogger = {
   request(fields: LogFields) {
-    console.info("[api]", format("info", "request", fields));
+    logger.info("request", fields);
   },
   response(fields: LogFields) {
-    console.info("[api]", format("info", "response", fields));
+    logger.info("response", fields);
   },
   retry(fields: LogFields) {
-    console.warn("[api]", format("warn", "retry", fields));
+    logger.warn("retry", fields);
   },
   error(fields: LogFields) {
-    console.error("[api]", format("error", "error", fields));
+    logger.error("error", fields);
   },
 };

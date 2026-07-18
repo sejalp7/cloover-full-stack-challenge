@@ -5,9 +5,9 @@ export default function Home() {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <p className={styles.eyebrow}>GreenQuote</p>
+        <p className={styles.heading}>GreenQuote</p>
         <h1 className={styles.brand}>Sign in</h1>
-        <p className={styles.lede}>
+        <p className={styles.tagline}>
          Get your solar financing pre-qualification quote.
         </p>
         <LoginForm />

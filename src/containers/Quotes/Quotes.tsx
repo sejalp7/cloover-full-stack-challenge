@@ -24,9 +24,9 @@ export function Quotes({ user, quotes }: QuotesProps) {
         <main className={styles.mainWide}>
           <div className={styles.headingRow}>
             <div>
-              <p className={styles.eyebrow}>GreenQuote</p>
+              <p className={styles.heading}>GreenQuote</p>
               <h1 className={styles.brand}>My quotes</h1>
-              <p className={styles.lede}>
+              <p className={styles.tagline}>
                 Your solar financing pre-qualifications.
               </p>
             </div>
@@ -48,11 +48,11 @@ export function Quotes({ user, quotes }: QuotesProps) {
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <p className={styles.eyebrow}>GreenQuote</p>
+        <p className={styles.heading}>GreenQuote</p>
         <h1 className={styles.brand}>
           {quote ? "Your pre-qualification" : "Request a quote"}
         </h1>
-        <p className={styles.lede}>
+        <p className={styles.tagline}>
           {quote
             ? "Review your system price, risk band, and installment offers."
             : "Tell us about your property and system to get financing offers."}
@@ -61,7 +61,7 @@ export function Quotes({ user, quotes }: QuotesProps) {
         {quote ? (
           <>
             <QuotesDetail quote={quote} onReset={() => setQuote(null)} />
-            <p className={styles.lede}>
+            <p className={styles.tagline}>
               <Link href={`/quotes/${quote.id}`}>Open quote details page</Link>
               {" · "}
               <Link href="/quotes">View all my quotes</Link>

@@ -25,12 +25,12 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
   return (
     <div className={styles.page}>
       <main className={styles.main}>
-        <p className={styles.eyebrow}>GreenQuote</p>
+        <p className={styles.heading}>GreenQuote</p>
         <h1 className={styles.brand}>Quote details</h1>
-        <p className={styles.lede}>
+        <p className={styles.tagline}>
           System price, risk band, and installment offers.
         </p>
-        <p className={styles.lede}>
+        <p className={styles.tagline}>
           <Link href={user.role === "admin" ? "/admin/quotes" : "/quotes"}>
             ← Back to quotes
           </Link>

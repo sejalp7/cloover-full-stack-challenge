@@ -14,7 +14,7 @@ export default async function RegisterPage() {
       <main className={styles.main}>
         <p className={styles.eyebrow}>GreenQuote</p>
         <h1 className={styles.brand}>Register</h1>
-        <p className={styles.lede}>
+        <p className={styles.tagline}>
           Create an account to get your solar financing pre-qualification.
         </p>
         <RegisterForm />

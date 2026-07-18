@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { setSessionUser } from "@/lib/auth";
+import { createRouteLogger } from "@/lib/logger";
 import { createUser } from "@/services/user";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const MIN_PASSWORD_LENGTH = 6;
 
 export async function POST(request: Request) {
+  const log = createRouteLogger("POST", "/api/auth/register");
+
   let body: unknown;
   try {
     body = await request.json();
   } catch {
+    log.response(400);
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
@@ -40,6 +44,7 @@ export async function POST(request: Request) {
   }
 
   if (errors.length > 0) {
+    log.response(400, { validationErrors: errors.length });
     return NextResponse.json(
       { error: "Validation failed", details: errors },
       { status: 400 },
@@ -61,6 +66,7 @@ export async function POST(request: Request) {
       role: user.role,
     });
 
+    log.response(201, { userId: user.id });
     return NextResponse.json(
       {
         id: user.id,
@@ -72,12 +78,14 @@ export async function POST(request: Request) {
     );
   } catch (error) {
     if (isUniqueViolation(error)) {
+      log.response(409);
       return NextResponse.json(
         { error: "An account with this email already exists" },
         { status: 409 },
       );
     }
-    console.error("Registration failed", error);
+    log.error(error);
+    log.response(500);
     return NextResponse.json(
       { error: "Registration failed" },
       { status: 500 },

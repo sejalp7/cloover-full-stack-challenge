@@ -1,0 +1,407 @@
+openapi: 3.0.3
+info:
+  title: GreenQuote API
+  version: 1.0.0
+  description: |
+    Solar financing pre-qualification API.
+    Authenticated routes use an httpOnly session cookie (`gq_session`) set by login/register.
+servers:
+  - url: http://localhost:3000
+    description: Local development
+tags:
+  - name: Health
+  - name: Auth
+  - name: Quotes
+paths:
+  /api/health:
+    get:
+      tags: [Health]
+      summary: Health check
+      operationId: getHealth
+      responses:
+        "200":
+          description: Service and database are healthy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthOk"
+        "503":
+          description: Database unreachable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthDegraded"
+
+  /api/auth/register:
+    post:
+      tags: [Auth]
+      summary: Register a new user
+      operationId: register
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RegisterRequest"
+      responses:
+        "201":
+          description: Account created; session cookie set
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        "409":
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/auth/login:
+    post:
+      tags: [Auth]
+      summary: Sign in
+      operationId: login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          description: Signed in; session cookie set
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "400":
+          description: Missing email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Sign out
+      operationId: logout
+      responses:
+        "200":
+          description: Session cleared
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+                    example: true
+
+  /api/auth/session:
+    get:
+      tags: [Auth]
+      summary: Current session user
+      operationId: getSession
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Authenticated session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionUser"
+        "401":
+          description: Not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/quotes:
+    get:
+      tags: [Quotes]
+      summary: List quotes
+      description: |
+        Regular users receive only their own quotes.
+        Admins receive all quotes.
+      operationId: listQuotes
+      security:
+        - cookieAuth: []
+      responses:
+        "200":
+          description: Quote list
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [quotes]
+                properties:
+                  quotes:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/QuoteListItem"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+    post:
+      tags: [Quotes]
+      summary: Create a quote (pre-qualification)
+      operationId: createQuote
+      security:
+        - cookieAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateQuoteRequest"
+      responses:
+        "201":
+          description: Quote created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteResponse"
+        "400":
+          description: Validation failed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ValidationError"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /api/quotes/{id}:
+    get:
+      tags: [Quotes]
+      summary: Get quote by id
+      description: Owner or admin only.
+      operationId: getQuoteById
+      security:
+        - cookieAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Quote detail
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuoteResponse"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "404":
+          description: Not found or not allowed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: gq_session
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+    ValidationError:
+      type: object
+      properties:
+        error:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+    HealthOk:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+        db:
+          type: boolean
+          example: true
+    HealthDegraded:
+      type: object
+      properties:
+        status:
+          type: string
+          example: degraded
+        db:
+          type: boolean
+          example: false
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+    RegisterRequest:
+      type: object
+      required: [fullName, email, password]
+      properties:
+        fullName:
+          type: string
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+          minLength: 6
+    AuthUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        fullName:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+    SessionUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        username:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+    UserRole:
+      type: string
+      enum: [user, admin]
+    CreateQuoteRequest:
+      type: object
+      required: [address, monthlyConsumptionKwh, systemSizeKw]
+      properties:
+        address:
+          type: string
+        monthlyConsumptionKwh:
+          type: number
+          exclusiveMinimum: 0
+        systemSizeKw:
+          type: number
+          exclusiveMinimum: 0
+        downPayment:
+          type: number
+          minimum: 0
+    QuoteOffer:
+      type: object
+      properties:
+        termYears:
+          type: integer
+          enum: [5, 10, 15]
+        apr:
+          type: number
+        principalUsed:
+          type: number
+        monthlyPayment:
+          type: number
+    QuoteResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        inputs:
+          type: object
+          properties:
+            address:
+              type: string
+            monthlyConsumptionKwh:
+              type: number
+            systemSizeKw:
+              type: number
+            downPayment:
+              type: number
+              nullable: true
+        derived:
+          type: object
+          properties:
+            systemPrice:
+              type: number
+            principal:
+              type: number
+            riskBand:
+              type: string
+              enum: [A, B, C]
+        offers:
+          type: array
+          items:
+            $ref: "#/components/schemas/QuoteOffer"
+        createdAt:
+          type: string
+          format: date-time
+    QuoteListItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        systemSizeKw:
+          type: number
+        systemPrice:
+          type: number
+        riskBand:
+          type: string
+          enum: [A, B, C]
+        userId:
+          type: string
+          format: uuid
+        userFullName:
+          type: string
+        userEmail:
+          type: string
+          format: email

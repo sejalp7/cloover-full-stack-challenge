@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { setSessionUser } from "@/lib/auth";
 import { getPgConnectionPool } from "@/lib/db";
+import { createRouteLogger } from "@/lib/logger";
 import type { UserRole } from "@/types/user";
 
 type UserRow = {
@@ -13,10 +14,13 @@ type UserRow = {
 };
 
 export async function POST(request: Request) {
+  const log = createRouteLogger("POST", "/api/auth/login");
+
   let body: unknown;
   try {
     body = await request.json();
   } catch {
+    log.response(400);
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
@@ -26,6 +30,7 @@ export async function POST(request: Request) {
   };
 
   if (!email || !password) {
+    log.response(400);
     return NextResponse.json(
       { error: "email and password are required" },
       { status: 400 },
@@ -42,6 +47,7 @@ export async function POST(request: Request) {
 
     const user = result.rows[0];
     if (!user || !(await bcrypt.compare(password, user.password_hash))) {
+      log.response(401);
       return NextResponse.json(
         { error: "Invalid credentials" },
         { status: 401 },
@@ -55,6 +61,7 @@ export async function POST(request: Request) {
       role: user.role,
     });
 
+    log.response(200, { userId: user.id });
     return NextResponse.json({
       id: user.id,
       email: user.email,
@@ -62,7 +69,8 @@ export async function POST(request: Request) {
       role: user.role,
     });
   } catch (error) {
-    console.error("Login failed", error);
+    log.error(error);
+    log.response(500);
     return NextResponse.json({ error: "Login failed" }, { status: 500 });
   }
 }
