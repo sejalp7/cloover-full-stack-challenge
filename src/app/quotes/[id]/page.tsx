@@ -31,7 +31,7 @@ export default async function QuoteDetailPage({ params }: QuoteDetailPageProps) 
           System price, risk band, and installment offers.
         </p>
         <p className={styles.lede}>
-          <Link href="/quotes/new">← Back to new quote</Link>
+          <Link href="/quotes">← Back to quotes</Link>
         </p>
         <QuotesDetail quote={generateQuoteResponse(quote)} />
       </main>

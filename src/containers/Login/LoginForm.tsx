@@ -56,7 +56,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
       };
 
       onSuccess?.(user);
-      router.push("/quotes/new");
+      router.push("/quotes");
       router.refresh();
     } catch {
       setFormError("Invalid email or password. Try the seeded test accounts.");

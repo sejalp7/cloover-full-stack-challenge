@@ -23,15 +23,42 @@
   gap: 1rem;
 }
 
+.brandBlock {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
 .brand {
   color: $color-navy;
   font-weight: 800;
   font-size: clamp(0.95rem, 2vw, 1.1rem);
   text-decoration: none;
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .brand:hover {
+  color: $color-blue;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+
+.navLink {
+  color: $color-muted;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.navLink:hover {
   color: $color-blue;
 }
 
@@ -63,6 +90,20 @@
 }
 
 @media (max-width: 640px) {
+  .brandBlock {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .nav {
+    gap: 0.5rem;
+  }
+
+  .navLink {
+    font-size: 0.82rem;
+  }
+
   .userName {
     max-width: 7rem;
   }

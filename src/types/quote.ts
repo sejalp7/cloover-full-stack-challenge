@@ -49,3 +49,26 @@ export type QuoteRow = {
   offers: QuoteRecord["offers"];
   created_at: Date;
 };
+
+/** Row shape for list tables (my quotes / admin). */
+export type QuoteListItem = {
+  id: string;
+  createdAt: string;
+  systemSizeKw: number;
+  systemPrice: number;
+  riskBand: "A" | "B" | "C";
+  userId: string;
+  userFullName: string;
+  userEmail: string;
+};
+
+export type QuoteListRow = {
+  id: string;
+  user_id: string;
+  system_size_kw: string;
+  system_price: string;
+  risk_band: "A" | "B" | "C";
+  created_at: Date;
+  full_name: string;
+  email: string;
+};

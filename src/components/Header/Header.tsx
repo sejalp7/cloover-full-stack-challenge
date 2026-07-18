@@ -11,16 +11,28 @@ export type HeaderProps = {
 };
 
 export function Header({
-  title = "Qreenqoute - solar financing",
+  title = "GreenQuote",
   userName = null,
   onLogout,
 }: HeaderProps) {
   return (
     <header className={styles.header}>
       <div className={styles.inner}>
-        <Link href="/" className={styles.brand}>
-          {title}
-        </Link>
+        <div className={styles.brandBlock}>
+          <Link href={userName ? "/quotes" : "/"} className={styles.brand}>
+            {title}
+          </Link>
+          {userName ? (
+            <nav className={styles.nav} aria-label="Main">
+              <Link href="/quotes" className={styles.navLink}>
+                My quotes
+              </Link>
+              <Link href="/quotes/new" className={styles.navLink}>
+                New quote
+              </Link>
+            </nav>
+          ) : null}
+        </div>
 
         <div className={styles.userArea}>
           {userName ? (

@@ -2,9 +2,19 @@ import { getPgConnectionPool } from "@/lib/db";
 import { calculatePricing } from "@/lib/pricing";
 import { generateQuoteRow, type QuoteInput } from "@/lib/quote-validation";
 import type {
-  QuoteRecord, QuoteRow
+  QuoteListItem,
+  QuoteListRow,
+  QuoteRecord,
+  QuoteRow,
 } from "@/types/quote";
 import type { SessionUser } from "@/types/user";
+
+export type ListQuotesFilter = {
+  /** Admin only: restrict to one user id */
+  userId?: string;
+  /** Admin only: case-insensitive match on user name or email */
+  q?: string;
+};
 
 
 export async function createQuote(
@@ -57,4 +67,68 @@ export async function getQuoteById(
   }
 
   return quote;
+}
+
+function generateQuoteListItem(row: QuoteListRow): QuoteListItem {
+  return {
+    id: row.id,
+    createdAt: row.created_at.toISOString(),
+    systemSizeKw: Number(row.system_size_kw),
+    systemPrice: Number(row.system_price),
+    riskBand: row.risk_band,
+    userId: row.user_id,
+    userFullName: row.full_name,
+    userEmail: row.email,
+  };
+}
+
+/**
+ * Lists quotes for the viewer. Non-admins always see only their own quotes.
+ * Admins may optionally filter by userId and/or name/email search.
+ */
+export async function listQuotes(
+  viewer: SessionUser,
+  filter: ListQuotesFilter = {},
+): Promise<QuoteListItem[]> {
+  const pool = getPgConnectionPool();
+  const params: unknown[] = [];
+  const conditions: string[] = [];
+
+  if (viewer.role !== "admin") {
+    params.push(viewer.id);
+    conditions.push(`q.user_id = $${params.length}`);
+  } else {
+    if (filter.userId) {
+      params.push(filter.userId);
+      conditions.push(`q.user_id = $${params.length}`);
+    }
+    if (filter.q?.trim()) {
+      params.push(`%${filter.q.trim().toLowerCase()}%`);
+      conditions.push(
+        `(LOWER(u.full_name) LIKE $${params.length} OR LOWER(u.email) LIKE $${params.length})`,
+      );
+    }
+  }
+
+  const where =
+    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+
+  const result = await pool.query<QuoteListRow>(
+    `SELECT
+       q.id,
+       q.user_id,
+       q.system_size_kw,
+       q.system_price,
+       q.risk_band,
+       q.created_at,
+       u.full_name,
+       u.email
+     FROM quotes q
+     INNER JOIN users u ON u.id = q.user_id
+     ${where}
+     ORDER BY q.created_at DESC`,
+    params,
+  );
+
+  return result.rows.map(generateQuoteListItem);
 }
