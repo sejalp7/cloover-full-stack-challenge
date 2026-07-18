@@ -1,8 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { QuoteResponse } from "@/types/quote";
 import type { SessionUser } from "@/types/user";
+import { QuotesDetail } from "./QuotesDetails/QuotesDetail";
 import { QuotesForm } from "./QuotesForm/QuotesForm";
 import styles from "./Quotes.module.scss";
 
@@ -26,9 +28,16 @@ export function Quotes({ user }: QuotesProps) {
             : "Tell us about your property and system to get financing offers."}
         </p>
 
-       
+        {quote ? (
+          <>
+            <QuotesDetail quote={quote} onReset={() => setQuote(null)} />
+            <p className={styles.lede}>
+              <Link href={`/quotes/${quote.id}`}>Open quote details page</Link>
+            </p>
+          </>
+        ) : (
           <QuotesForm user={user} onSuccess={setQuote} />
-     
+        )}
       </main>
     </div>
   );

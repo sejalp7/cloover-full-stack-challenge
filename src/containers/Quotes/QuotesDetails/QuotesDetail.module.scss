@@ -1,0 +1,60 @@
+@use "../../../styles/variables" as *;
+
+.card {
+  width: min(36rem, 100%);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $space-md;
+  margin: 0 0 $space-md;
+}
+
+.stat {
+  margin: 0;
+
+  dt {
+    margin: 0 0 0.25rem;
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: $color-muted;
+  }
+
+  dd {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: $color-navy;
+  }
+}
+
+.riskBand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  padding: 0.15rem 0.55rem;
+  border-radius: $radius-sm;
+  background: rgba($color-blue, 0.12);
+  color: $color-blue;
+
+  &[data-band="A"] {
+    background: rgba($color-green, 0.14);
+    color: $color-green-deep;
+  }
+
+  &[data-band="C"] {
+    background: rgba($color-danger, 0.1);
+    color: $color-danger;
+  }
+}
+
+@media (max-width: 520px) {
+  .summary {
+    grid-template-columns: 1fr;
+  }
+}
