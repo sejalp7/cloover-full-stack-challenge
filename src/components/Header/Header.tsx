@@ -2,17 +2,20 @@
 
 import Link from "next/link";
 import { Button } from "@/components/Button/Button";
+import type { UserRole } from "@/types/user";
 import styles from "./Header.module.scss";
 
 export type HeaderProps = {
   title?: string;
   userName?: string | null;
+  userRole?: UserRole | null;
   onLogout?: () => void;
 };
 
 export function Header({
   title = "GreenQuote",
   userName = null,
+  userRole = null,
   onLogout,
 }: HeaderProps) {
   return (
@@ -30,6 +33,11 @@ export function Header({
               <Link href="/quotes/new" className={styles.navLink}>
                 New quote
               </Link>
+              {userRole === "admin" ? (
+                <Link href="/admin/quotes" className={styles.navLink}>
+                  Admin
+                </Link>
+              ) : null}
             </nav>
           ) : null}
         </div>

@@ -66,12 +66,26 @@ const { data } = await apiClient.get("/health");
 | --- | --- | --- | --- |
 | `GET` | `/api/health` | no | `{ status, db }` |
 | `POST` | `/api/auth/login` | no | `{ email, password }` → sets session cookie |
+| `POST` | `/api/auth/register` | no | `{ fullName, email, password }` → creates user + session |
+| `GET` | `/api/quotes` | yes | own quotes for users; all quotes for admins |
 | `POST` | `/api/quotes` | yes | validates, prices, persists, returns normalized quote |
 | `GET` | `/api/quotes/:id` | yes | owner or admin only |
 
 Currency for pricing: EUR-equivalent units (`systemPrice = systemSizeKw * 1200`).
 
-## What’s next
+### Main UI routes
 
-- Registration UI + quote form / results / admin views
-- `GET /api/quotes` list endpoint
+| Path | Who | Purpose |
+| --- | --- | --- |
+| `/` | public | Sign in |
+| `/register` | public | Register |
+| `/quotes` | signed-in | My quotes |
+| `/quotes/new` | signed-in | New quote form + results |
+| `/quotes/[id]` | owner/admin | Quote detail |
+| `/admin/quotes` | admin | All quotes (server-side auth; no filters yet) |
+
+## What could be improved
+
+- **Admin quote filters** — filter `/admin/quotes` by user (dropdown and/or search by name/email), enforced server-side
+- Formal DB migrations instead of reapplying `schema.sql` on seed
+- Pagination for large quote lists

@@ -9,14 +9,6 @@ import type {
 } from "@/types/quote";
 import type { SessionUser } from "@/types/user";
 
-export type ListQuotesFilter = {
-  /** Admin only: restrict to one user id */
-  userId?: string;
-  /** Admin only: case-insensitive match on user name or email */
-  q?: string;
-};
-
-
 export async function createQuote(
   userId: string,
   input: QuoteInput,
@@ -83,35 +75,20 @@ function generateQuoteListItem(row: QuoteListRow): QuoteListItem {
 }
 
 /**
- * Lists quotes for the viewer. Non-admins always see only their own quotes.
- * Admins may optionally filter by userId and/or name/email search.
+ * Lists quotes for the viewer.
+ * Regular users see only their own quotes; admins see all quotes.
  */
 export async function listQuotes(
   viewer: SessionUser,
-  filter: ListQuotesFilter = {},
 ): Promise<QuoteListItem[]> {
   const pool = getPgConnectionPool();
   const params: unknown[] = [];
-  const conditions: string[] = [];
+  let where = "";
 
   if (viewer.role !== "admin") {
     params.push(viewer.id);
-    conditions.push(`q.user_id = $${params.length}`);
-  } else {
-    if (filter.userId) {
-      params.push(filter.userId);
-      conditions.push(`q.user_id = $${params.length}`);
-    }
-    if (filter.q?.trim()) {
-      params.push(`%${filter.q.trim().toLowerCase()}%`);
-      conditions.push(
-        `(LOWER(u.full_name) LIKE $${params.length} OR LOWER(u.email) LIKE $${params.length})`,
-      );
-    }
+    where = `WHERE q.user_id = $${params.length}`;
   }
-
-  const where =
-    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
 
   const result = await pool.query<QuoteListRow>(
     `SELECT

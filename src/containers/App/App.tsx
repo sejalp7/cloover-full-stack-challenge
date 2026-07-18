@@ -25,7 +25,11 @@ export function AppLayout({ user, children }: AppLayoutProps) {
 
   return (
     <>
-      <Header userName={user?.username ?? null} onLogout={handleLogout} />
+      <Header
+        userName={user?.username ?? null}
+        userRole={user?.role ?? null}
+        onLogout={handleLogout}
+      />
       <div className="appShell">{children}</div>
     </>
   );
