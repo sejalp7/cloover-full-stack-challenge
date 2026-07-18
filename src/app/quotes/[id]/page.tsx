@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { QuotesDetail } from "@/containers/Quotes/QuotesDetails/QuotesDetail";
+import { QuotesDetail } from "@/containers/Quotes/QuotesDetail/QuotesDetail";
 import { getSessionUser } from "@/lib/auth";
 import { generateQuoteResponse } from "@/lib/quote-validation";
 import { getQuoteById } from "@/services/quote";

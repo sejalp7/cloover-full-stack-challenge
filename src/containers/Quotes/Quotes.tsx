@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import type { QuoteListItem, QuoteResponse } from "@/types/quote";
 import type { SessionUser } from "@/types/user";
-import { QuotesDetail } from "./QuotesDetails/QuotesDetail";
+import { QuotesDetail } from "./QuotesDetail/QuotesDetail";
 import { QuotesForm } from "./QuotesForm/QuotesForm";
 import { QuotesList } from "./QuotesList/QuotesList";
 import styles from "./Quotes.module.scss";
