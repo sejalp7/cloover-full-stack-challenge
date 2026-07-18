@@ -1,0 +1,69 @@
+@use "../../styles/variables" as *;
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 3rem;
+  padding: 0.85rem 1.35rem;
+  border: none;
+  border-radius: $radius-sm;
+  font-family: inherit;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+}
+
+.button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.button:focus-visible {
+  outline: 3px solid rgba($color-focus, 0.35);
+  outline-offset: 2px;
+}
+
+.primary {
+  color: #fff;
+  background: $color-green;
+}
+
+.primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+.secondary {
+  color: $color-navy;
+  background: $color-surface;
+  border: 1px solid $color-border;
+}
+
+.ghost {
+  color: $color-navy;
+  background: transparent;
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+  min-height: auto;
+  padding: 0.35rem 0.5rem;
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+.label {
+  line-height: 1;
+}
+
+.chevron {
+  font-size: 1.25rem;
+  line-height: 1;
+  translate: 0 -1px;
+}

@@ -14,13 +14,24 @@ body {
 }
 
 body {
-  font-family: $font-sans;
+  font-family: var(--font-manrope), $font-sans;
   color: $color-text;
   background:
-    radial-gradient(circle at top left, rgba(31, 122, 77, 0.12), transparent 40%),
-    linear-gradient(180deg, $color-bg 0%, #e8efe9 100%);
+    radial-gradient(circle at top right, rgba(47, 158, 107, 0.12), transparent 36%),
+    radial-gradient(circle at top left, rgba(43, 108, 176, 0.12), transparent 34%),
+    linear-gradient(180deg, $color-bg 0%, #e7edf5 100%);
 }
 
 a {
-  color: $color-accent;
+  color: $color-blue;
+}
+
+.appShell {
+  min-height: 100vh;
+  padding-top: $header-height;
+}
+
+:focus-visible {
+  outline: 3px solid rgba($color-focus, 0.35);
+  outline-offset: 2px;
 }

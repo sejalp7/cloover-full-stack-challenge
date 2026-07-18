@@ -1,0 +1,17 @@
+@use "../../../styles/variables" as *;
+
+.card {
+  width: min(28rem, 100%);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.formError {
+  margin: 0;
+  color: $color-danger;
+  font-size: 0.9rem;
+}

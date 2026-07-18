@@ -1,0 +1,22 @@
+@use "../../styles/variables" as *;
+
+.wrap {
+  min-height: calc(100vh - #{$header-height});
+  padding: $space-md;
+  background: $color-surface;
+}
+
+.loading {
+  margin: $space-lg auto;
+  text-align: center;
+  color: $color-muted;
+}
+
+/* Keep swagger chrome readable inside the app shell */
+.wrap :global(.swagger-ui) {
+  font-family: inherit;
+}
+
+.wrap :global(.swagger-ui .topbar) {
+  display: none;
+}

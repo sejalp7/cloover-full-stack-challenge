@@ -1,0 +1,65 @@
+@use "sass:color";
+@use "../../styles/variables" as *;
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  width: 100%;
+}
+
+.label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: $color-text;
+}
+
+.control {
+  width: 100%;
+  min-height: 2.85rem;
+  padding: 0.7rem 0.9rem;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  background: $color-surface;
+  color: $color-text;
+  font: inherit;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.control::placeholder {
+  color: color.adjust($color-muted, $lightness: 18%);
+}
+
+.control:focus {
+  outline: none;
+  border-color: $color-blue;
+  box-shadow: 0 0 0 3px rgba($color-focus, 0.18);
+}
+
+.select {
+  appearance: none;
+  background-image: linear-gradient(45deg, transparent 50%, $color-muted 50%),
+    linear-gradient(135deg, $color-muted 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 2.25rem;
+}
+
+.invalid {
+  border-color: $color-danger;
+}
+
+.error {
+  margin: 0;
+  color: $color-danger;
+  font-size: 0.8rem;
+}
+
+.hint {
+  margin: 0;
+  color: $color-muted;
+  font-size: 0.8rem;
+}
