@@ -1,5 +1,20 @@
 @use "../../../styles/variables" as *;
 
+.loading {
+  width: 100%;
+  padding: 1rem 1.15rem 1.25rem;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background: $color-surface;
+  box-shadow: $shadow-card;
+}
+
+.loadingCaption {
+  margin: 0 0 1rem;
+  font-weight: 800;
+  color: $color-navy;
+}
+
 .userCell {
   display: flex;
   flex-direction: column;

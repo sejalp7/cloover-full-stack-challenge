@@ -13,12 +13,14 @@ export type QuotesProps = {
   user: SessionUser;
   /** When provided, renders the user's quotes table instead of the create form. */
   quotes?: QuoteListItem[];
+  /** Shows OptimisticLoader inside QuotesList while quotes are fetching. */
+  listLoading?: boolean;
 };
 
-export function Quotes({ user, quotes }: QuotesProps) {
+export function Quotes({ user, quotes, listLoading = false }: QuotesProps) {
   const [quote, setQuote] = useState<QuoteResponse | null>(null);
 
-  if (quotes !== undefined) {
+  if (quotes !== undefined || listLoading) {
     return (
       <div className={styles.pageWide}>
         <main className={styles.mainWide}>
@@ -36,7 +38,8 @@ export function Quotes({ user, quotes }: QuotesProps) {
           </div>
 
           <QuotesList
-            quotes={quotes}
+            quotes={quotes ?? []}
+            isLoading={listLoading}
             caption="Your quotes"
             emptyMessage="You have not created any quotes yet."
           />

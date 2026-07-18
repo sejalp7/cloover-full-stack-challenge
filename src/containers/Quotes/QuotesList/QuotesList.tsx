@@ -1,10 +1,12 @@
 import Link from "next/link";
+import { OptimisticLoader } from "@/components/OptimisticLoader/OptimisticLoader";
 import { Table, type TableColumn } from "@/components/Table/Table";
 import type { QuoteListItem } from "@/types/quote";
 import styles from "./QuotesList.module.scss";
 
 export type QuotesListProps = {
   quotes: QuoteListItem[];
+  isLoading?: boolean;
   showUser?: boolean;
   caption?: string;
   emptyMessage?: string;
@@ -27,11 +29,21 @@ function formatDate(iso: string): string {
 
 export function QuotesList({
   quotes,
+  isLoading = false,
   showUser = false,
   caption = "Quotes",
   emptyMessage = "No quotes yet.",
   detailHref = (quote) => `/quotes/${quote.id}`,
 }: QuotesListProps) {
+  if (isLoading) {
+    return (
+      <div className={styles.loading}>
+        {caption ? <p className={styles.loadingCaption}>{caption}</p> : null}
+        <OptimisticLoader label="Loading quotes" lines={5} />
+      </div>
+    );
+  }
+
   const columns: TableColumn<QuoteListItem>[] = [
     {
       key: "date",

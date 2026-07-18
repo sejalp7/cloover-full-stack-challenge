@@ -43,4 +43,10 @@ describe("QuotesList", () => {
     expect(screen.getByText("Test User")).toBeInTheDocument();
     expect(screen.getByText("user@test.com")).toBeInTheDocument();
   });
+
+  it("shows OptimisticLoader while loading", () => {
+    render(<QuotesList quotes={[]} isLoading caption="Your quotes" />);
+    expect(screen.getByRole("status", { name: "Loading quotes" })).toBeInTheDocument();
+    expect(screen.queryByText("No quotes yet.")).not.toBeInTheDocument();
+  });
 });
