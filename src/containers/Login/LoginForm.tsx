@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 import { Button } from "@/components/Button/Button";
@@ -103,6 +104,8 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
         </Button>
 
         <p className={styles.hint}>
+          No account yet? <Link href="/register">Create one</Link>
+          <br />
           Seeded accounts: <code>user@test.com</code> / <code>user123</code>,{" "}
           <code>admin@test.com</code> / <code>admin123</code>
         </p>
